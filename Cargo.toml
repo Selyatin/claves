@@ -2,8 +2,14 @@
 name = "claves"
 version = "0.1.0"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+authors = ["selyatinismet@gmail.com"]
+license = "MIT"
+keywords = ["keyboard", "mouse", "input"]
+categories = ["accessibility", "api-bindings"]
+description = "A library for capturing Keystrokes and Mouse clicks on Linux, MacOS and Windows."
+readme = "README.md"
+homepage = "https://github.com/Selyatin/claves"
+repository = "https://github.com/Selyatin/claves"
 
 [dependencies]
 crossbeam-channel = "0.5.6"
