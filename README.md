@@ -6,6 +6,6 @@ It uses an **unbounded** [crossbeam_channel](https://lib.rs/crossbeam_channel) t
 
 ## Supported Platforms
 
-- [*] MacOS (Uses Core Graphics API to intercept Session Events and Carbon API to translate Virtual Keycodes into Unicode Characters). Requires Accessibility permissions, check the [MacOS Example](examples/macos.rs)
-- [*] Windows (Uses Windows Hooks API to intercept Events and the Winuser API to translate Virtual Keycodes into Unicode Characters)
+- [x] MacOS (Uses Core Graphics API to intercept Session Events and Carbon API to translate Virtual Keycodes into Unicode Characters). Requires Accessibility permissions, check the [MacOS Example](examples/macos.rs).
+- [x] Windows (Uses Windows Hooks API to intercept Events and the Winuser API to translate Virtual Keycodes into Unicode Characters).
 - [ ] Linux. _Coming soon_.
