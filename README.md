@@ -1,6 +1,6 @@
 # Claves - A library for capturing Keystrokes and Mouse clicks on Linux, MacOS and Windows
 
-This library uses the most efficient methods for capturing keystrokes on a global scale. 
+This library uses the most efficient methods for capturing global **Keystrokes** and **Mouse Clicks**. 
 
 It uses an **unbounded** [crossbeam_channel](https://lib.rs/crossbeam_channel) to provide a global channel from which you can receive the `Event` data on multiple threads.
 
