@@ -18,9 +18,7 @@ use winapi::{
     },
 };
 
-lazy_static! {
-    static ref CAPTURING_THREAD_ID: Mutex<Option<DWORD>> = Mutex::new(None);
-}
+static CAPTURING_THREAD_ID: Mutex<Option<DWORD>> = Mutex::new(None);
 
 pub fn init() {
     thread::spawn(|| unsafe {
@@ -155,7 +153,7 @@ unsafe extern "system" fn hook_callback(code: c_int, w_param: WPARAM, l_param: L
 
             let mapped_c = MapVirtualKeyExA(v_key, MAPVK_VK_TO_CHAR, layout);
 
-            let mut c = char::from_u32(mapped_c).unwrap(); 
+            let mut c = char::from_u32(mapped_c).unwrap();
 
             if is_lowercase {
                 c = c.to_ascii_lowercase();

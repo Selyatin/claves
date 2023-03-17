@@ -7,7 +7,7 @@ mod macos;
 mod windows;
 
 use crossbeam_channel::{Receiver, Sender};
-use lazy_static::lazy_static;
+use once_cell::sync::Lazy;
 use std::{
     fmt,
     sync::atomic::{AtomicBool, Ordering},
@@ -17,10 +17,11 @@ pub use error::*;
 
 static INITIALIZED: AtomicBool = AtomicBool::new(false);
 
-lazy_static! {
-    static ref CHANNEL: (Sender<Event>, Receiver<Event>) = crossbeam_channel::unbounded();
-    static ref CLOSE_CHANNEL: (Sender<()>, Receiver<()>) = crossbeam_channel::bounded(0);
-}
+static CHANNEL: Lazy<(Sender<Event>, Receiver<Event>)> =
+    Lazy::new(|| crossbeam_channel::unbounded());
+
+static CLOSE_CHANNEL: Lazy<(Sender<()>, Receiver<()>)> =
+    Lazy::new(|| crossbeam_channel::bounded(0));
 
 /// Initializes the keylogging thread and returns a [`Receiver<Event>`] to listen for keystrokes
 /// and mouse events.

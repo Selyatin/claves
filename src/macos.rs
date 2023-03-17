@@ -89,7 +89,8 @@ fn callback(_proxy: CGEventTapProxy, event_type: CGEventType, event: &CGEvent) -
             match key_code_to_sign(key_code, is_shift_pressed) {
                 Some(keystroke) => keystroke,
                 None => {
-                    let mut c = char::from_u32(unsafe {key_code_to_unicode(key_code) as u32}).unwrap();
+                    let mut c =
+                        char::from_u32(unsafe { key_code_to_unicode(key_code) as u32 }).unwrap();
 
                     if (is_shift_pressed && !is_capslock_on)
                         || (!is_shift_pressed && is_capslock_on)
