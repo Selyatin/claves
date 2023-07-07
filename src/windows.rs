@@ -7,15 +7,6 @@ use winapi::{
     um::{
         processthreadsapi::GetCurrentThreadId,
         winuser::*
-        // winuser::{
-        //     CallNextHookEx, DispatchMessageA, GetKeyState, GetKeyboardLayout, GetMessageA,
-        //     MapVirtualKeyExA, PostThreadMessageA, SetWindowsHookExA, TranslateMessage,
-        //     UnhookWindowsHookEx, HC_ACTION, KBDLLHOOKSTRUCT, MAPVK_VK_TO_CHAR, MOUSEHOOKSTRUCT,
-        //     MSG, VK_BACK, VK_CAPITAL, VK_CONTROL, VK_DOWN, VK_END, VK_ESCAPE, VK_HOME, VK_LCONTROL,
-        //     VK_LEFT, VK_LSHIFT, VK_LWIN, VK_MENU, VK_NEXT, VK_PRIOR, VK_RCONTROL, VK_RETURN,
-        //     VK_RIGHT, VK_RSHIFT, VK_RWIN, VK_SHIFT, VK_TAB, VK_UP, WH_KEYBOARD_LL, WH_MOUSE_LL,
-        //     WM_KEYDOWN, WM_LBUTTONDOWN, WM_MBUTTONDOWN, WM_QUIT, WM_RBUTTONDOWN,
-        // },
     },
 };
 
