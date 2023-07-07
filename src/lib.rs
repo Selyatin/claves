@@ -101,6 +101,7 @@ pub enum Keystroke {
     Tab,
     Space,
     Delete,
+    Backspace,
     VolumeUp,
     VolumeDown,
     Mute,
@@ -134,6 +135,11 @@ pub enum Keystroke {
     RightArrow,
     DownArrow,
     Help,
+    Insert,
+    Printscreen,
+    ScrollLock,
+    Pause,
+    Menu,
     Char(char),
 }
 

@@ -6,15 +6,7 @@ use winapi::{
     shared::minwindef::{DWORD, LPARAM, LRESULT, UINT, WPARAM},
     um::{
         processthreadsapi::GetCurrentThreadId,
-        winuser::{
-            CallNextHookEx, DispatchMessageA, GetKeyState, GetKeyboardLayout, GetMessageA,
-            MapVirtualKeyExA, PostThreadMessageA, SetWindowsHookExA, TranslateMessage,
-            UnhookWindowsHookEx, HC_ACTION, KBDLLHOOKSTRUCT, MAPVK_VK_TO_CHAR, MOUSEHOOKSTRUCT,
-            MSG, VK_BACK, VK_CAPITAL, VK_CONTROL, VK_DOWN, VK_END, VK_ESCAPE, VK_HOME, VK_LCONTROL,
-            VK_LEFT, VK_LSHIFT, VK_LWIN, VK_MENU, VK_NEXT, VK_PRIOR, VK_RCONTROL, VK_RETURN,
-            VK_RIGHT, VK_RSHIFT, VK_RWIN, VK_SHIFT, VK_TAB, VK_UP, WH_KEYBOARD_LL, WH_MOUSE_LL,
-            WM_KEYDOWN, WM_LBUTTONDOWN, WM_MBUTTONDOWN, WM_QUIT, WM_RBUTTONDOWN,
-        },
+        winuser::*
     },
 };
 
@@ -94,8 +86,10 @@ unsafe extern "system" fn hook_callback(code: c_int, w_param: WPARAM, l_param: L
 
             let v_key = keyboard_dll_hook_struct.vkCode;
 
+            println!("{:#?}", v_key);
+
             let non_char_key = match v_key as i32 {
-                VK_BACK => Some(Delete),
+                VK_BACK => Some(Backspace),
                 VK_RETURN => Some(Return),
                 VK_TAB => Some(Tab),
                 VK_SHIFT | VK_LSHIFT => Some(Shift),
@@ -114,6 +108,24 @@ unsafe extern "system" fn hook_callback(code: c_int, w_param: WPARAM, l_param: L
                 VK_DOWN => Some(DownArrow),
                 VK_PRIOR => Some(PageUp),
                 VK_NEXT => Some(PageDown),
+                VK_F1 => Some(F1),
+                VK_F2 => Some(F2),
+                VK_F3 => Some(F3),
+                VK_F4 => Some(F4),
+                VK_F5 => Some(F5),
+                VK_F6 => Some(F6),
+                VK_F7 => Some(F7),
+                VK_F8 => Some(F8),
+                VK_F9 => Some(F9),
+                VK_F10 => Some(F10),
+                VK_F11 => Some(F11),
+                VK_F12 => Some(F12),
+                VK_DELETE => Some(Delete),
+                45 => Some(Insert),
+                44 => Some(Printscreen),
+                145 => Some(ScrollLock),
+                19 => Some(Pause),
+                93 => Some(Menu),
                 _ => None,
             };
 
@@ -139,6 +151,14 @@ unsafe extern "system" fn hook_callback(code: c_int, w_param: WPARAM, l_param: L
                     0x37 => Some('&'),
                     0x38 => Some('*'),
                     0x39 => Some('('),
+                    188 => Some('<'),
+                    190 => Some('.'),
+                    191 => Some('?'),
+                    186 => Some(':'),
+                    222 => Some('"'),
+                    219 => Some('{'),
+                    221 => Some('}'),
+                    220 => Some('|'),
                     _ => None,
                 };
 
