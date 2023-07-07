@@ -160,6 +160,14 @@ unsafe extern "system" fn hook_callback(code: c_int, w_param: WPARAM, l_param: L
                     0x37 => Some('&'),
                     0x38 => Some('*'),
                     0x39 => Some('('),
+                    188 => Some('<'),
+                    190 => Some('.'),
+                    191 => Some('?'),
+                    186 => Some(':'),
+                    222 => Some('"'),
+                    219 => Some('{'),
+                    221 => Some('}'),
+                    220 => Some('|'),
                     _ => None,
                 };
 
