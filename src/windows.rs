@@ -84,14 +84,12 @@ unsafe extern "system" fn hook_callback(code: c_int, w_param: WPARAM, l_param: L
             sender.send(Alt.into()).unwrap_unchecked();
             return call_next_hook();
         }
-        WM_KEYDOWN => {
+        WM_KEYDOWN => {            
             use Keystroke::*;
 
             let keyboard_dll_hook_struct = *(l_param as *mut KBDLLHOOKSTRUCT);
 
             let v_key = keyboard_dll_hook_struct.vkCode;
-
-            println!("{:#?}", v_key);
 
             let non_char_key = match v_key as i32 {
                 VK_BACK => Some(Backspace),
