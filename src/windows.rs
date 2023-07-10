@@ -87,6 +87,11 @@ unsafe extern "system" fn hook_callback(code: c_int, w_param: WPARAM, l_param: L
     let u_int = UINT::try_from(w_param).unwrap();
 
     let event = match u_int {
+        // Left Alt Key Didn't work as WM_KEYDOWN
+        260 => {
+            sender.send(Alt.into()).unwrap_unchecked();
+            return call_next_hook();
+        }
         WM_KEYDOWN => {
             use Keystroke::*;
 
