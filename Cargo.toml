@@ -1,6 +1,6 @@
 [package]
 name = "claves"
-version = "0.1.3"
+version = "0.1.4"
 edition = "2021"
 authors = ["selyatinismet@gmail.com"]
 license = "MIT"
