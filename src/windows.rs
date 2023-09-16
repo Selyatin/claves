@@ -1,16 +1,14 @@
 #![cfg(target_os = "windows")]
 use super::*;
-use std::{ptr, sync::Mutex, thread};
-use winapi::{
-    ctypes::c_int,
-    shared::minwindef::{DWORD, LPARAM, LRESULT, UINT, WPARAM},
-    um::{
-        processthreadsapi::GetCurrentThreadId,
-        winuser::*
-    },
+use std::{mem, sync::Mutex, thread};
+
+use windows_sys::Win32::{
+    Foundation::{LPARAM, LRESULT, WPARAM},
+    System::Threading::GetCurrentThreadId,
+    UI::{Input::KeyboardAndMouse::*, WindowsAndMessaging::*},
 };
 
-static CAPTURING_THREAD_ID: Mutex<Option<DWORD>> = Mutex::new(None);
+static CAPTURING_THREAD_ID: Mutex<Option<u32>> = Mutex::new(None);
 
 pub fn init() {
     thread::spawn(|| unsafe {
@@ -33,15 +31,14 @@ pub fn init() {
 }
 
 unsafe fn capture_peripherals() {
-    let keyboard_hhook = SetWindowsHookExA(WH_KEYBOARD_LL, Some(hook_callback), ptr::null_mut(), 0);
+    let keyboard_hhook = SetWindowsHookExA(WH_KEYBOARD_LL, Some(hook_callback), 0, 0);
 
-    let mouse_hhook = SetWindowsHookExA(WH_MOUSE_LL, Some(hook_callback), ptr::null_mut(), 0);
+    let mouse_hhook = SetWindowsHookExA(WH_MOUSE_LL, Some(hook_callback), 0, 0);
 
-    if keyboard_hhook.is_null() || mouse_hhook.is_null() {
+    if keyboard_hhook == 0 || mouse_hhook == 0 {
         panic!(
             "Couldn't Setup Hooks, Keyboard: {} Mouse: {}",
-            keyboard_hhook.is_null(),
-            mouse_hhook.is_null()
+            keyboard_hhook, mouse_hhook
         );
     }
 
@@ -58,40 +55,38 @@ unsafe fn capture_peripherals() {
 
 /// This function handles the Event Loop, which is necessary in order for the hooks to function.
 fn message_loop() {
-    let mut msg = MSG::default();
     unsafe {
-        while GetMessageA(&mut msg, ptr::null_mut(), 0, 0) > 0 {
+        let mut msg: MSG = mem::zeroed();
+        while GetMessageA(&mut msg, 0, 0, 0) > 0 {
             TranslateMessage(&msg);
             DispatchMessageA(&msg);
         }
     }
 }
 
-unsafe extern "system" fn hook_callback(code: c_int, w_param: WPARAM, l_param: LPARAM) -> LRESULT {
-    let call_next_hook = || CallNextHookEx(ptr::null_mut(), code, w_param, l_param);
+unsafe extern "system" fn hook_callback(code: i32, w_param: WPARAM, l_param: LPARAM) -> LRESULT {
+    use Keystroke::*;
 
-    if code != HC_ACTION {
+    let call_next_hook = || CallNextHookEx(0, code, w_param, l_param);
+
+    if code as u32 != HC_ACTION {
         return call_next_hook();
     }
 
     let sender = &CHANNEL.0;
 
-    let u_int = UINT::try_from(w_param).unwrap();
-
-    let event = match u_int {
+    let event = match w_param as u32 {
         // Left Alt Key Didn't work as WM_KEYDOWN
         260 => {
             sender.send(Alt.into()).unwrap_unchecked();
             return call_next_hook();
         }
-        WM_KEYDOWN => {            
-            use Keystroke::*;
-
+        WM_KEYDOWN => {
             let keyboard_dll_hook_struct = *(l_param as *mut KBDLLHOOKSTRUCT);
 
             let v_key = keyboard_dll_hook_struct.vkCode;
 
-            let non_char_key = match v_key as i32 {
+            let non_char_key = match v_key as u16 {
                 VK_BACK => Some(Backspace),
                 VK_RETURN => Some(Return),
                 VK_TAB => Some(Tab),
@@ -137,10 +132,10 @@ unsafe extern "system" fn hook_callback(code: c_int, w_param: WPARAM, l_param: L
                 return call_next_hook();
             }
 
-            let is_lowercase = (GetKeyState(VK_CAPITAL) & 0x0001) == 0
-                && (GetKeyState(VK_SHIFT) & 0x1000) == 0
-                && (GetKeyState(VK_LSHIFT) & 0x1000) == 0
-                && (GetKeyState(VK_RSHIFT) & 0x1000) == 0;
+            let is_lowercase = (GetKeyState(VK_CAPITAL as i32) & 0x0001) == 0
+                && (GetKeyState(VK_SHIFT as i32) & 0x1000) == 0
+                && (GetKeyState(VK_LSHIFT as i32) & 0x1000) == 0
+                && (GetKeyState(VK_RSHIFT as i32) & 0x1000) == 0;
 
             if !is_lowercase {
                 let c = match v_key {
